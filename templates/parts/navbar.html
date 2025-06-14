@@ -1,3 +1,79 @@
-<p>
-    navbar
-</p>
+<!-- templates/parts/navbar.html -->
+{% load static %}
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'index' %}" class="logo">SchoolClubs</a>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item">
+                <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">🏆 Clubs ▾</a>
+                <div class="dropdown-content">
+                    <a href="#">Browse All Clubs</a>
+                    <a href="#">Sports Clubs</a>
+                    <a href="#">Arts Clubs</a>
+                    <a href="#">Academic Clubs</a>
+                    <a href="#">Create New Club</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">📅 Activities ▾</a>
+                <div class="dropdown-content">
+                    <a href="#">Upcoming Events</a>
+                    <a href="#">My Activities</a>
+                    <a href="#">Activity Calendar</a>
+                    <a href="#">Past Events</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">👥 Members ▾</a>
+                <div class="dropdown-content">
+                    <a href="#">Member Directory</a>
+                    <a href="#">My Profile</a>
+                    <a href="#">Join Clubs</a>
+                    <a href="#">Member Statistics</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">⚙️ Admin ▾</a>
+                <div class="dropdown-content">
+                    <a href="#">Dashboard</a>
+                    <a href="#">Manage Clubs</a>
+                    <a href="#">User Management</a>
+                    <a href="#">Reports</a>
+                    <a href="#">Settings</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'about' %}" class="nav-link">ℹ️ About</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">👤 Login</a>
+            </li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileToggle">☰</button>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar')) {
+                navMenu.classList.remove('active');
+            }
+        });
+    }
+</script>

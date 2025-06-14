@@ -1,9 +1,57 @@
-
+<!-- templates/base.html -->
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-{% include "parts/navbar.html" %}
-{% block content%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Clubs{% endblock %}</title>
+    
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    
+    <!-- Font and Base Styling -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% endblock content%}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-{% include "parts/footbar.html" %}
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include "parts/navbar.html" %}
+    
+    <main class="main-content">
+        {% block content %}
+        {% endblock content %}
+    </main>
+    
+    {% include "parts/footbar.html" %}
+</body>
+</html>

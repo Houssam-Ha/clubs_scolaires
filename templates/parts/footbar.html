@@ -1,3 +1,57 @@
-<p>
-    footbar
-</p>
+<!-- templates/parts/footbar.html -->
+{% load static %}
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🏫 About School Clubs</h3>
+                <p>
+                    Our platform connects students with exciting club opportunities, 
+                    fostering community engagement and personal growth through 
+                    organized activities and meaningful participation.
+                </p>
+                <div class="social-links">
+                    <a href="#" title="Facebook">📘</a>
+                    <a href="#" title="Twitter">🐦</a>
+                    <a href="#" title="Instagram">📸</a>
+                    <a href="#" title="LinkedIn">💼</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Browse Clubs</a></li>
+                    <li><a href="#">Upcoming Events</a></li>
+                    <li><a href="#">Member Directory</a></li>
+                    <li><a href="#">Activity Calendar</a></li>
+                    <li><a href="#">Join a Club</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>For Administrators</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Admin Dashboard</a></li>
+                    <li><a href="#">Create New Club</a></li>
+                    <li><a href="#">Manage Members</a></li>
+                    <li><a href="#">Generate Reports</a></li>
+                    <li><a href="#">System Settings</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact & Support</h3>
+                <p>📧 support@schoolclubs.edu</p>
+                <p>📞 +1 (555) 123-4567</p>
+                <p>📍 123 Education Street<br>Learning City, LC 12345</p>
+                <p><a href="#">Help Center</a> | <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} School Clubs Management System. All rights reserved. | Built with ❤️ for education</p>
+        </div>
+    </div>
+</footer>
