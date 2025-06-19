@@ -13,8 +13,8 @@ def index(request):
     
     return render(request, "pages/index.html", x)
 
-# def about(request):
-#     return render(request, "pages/about.html")
+def profile(request):
+    return render(request, "pages/profile.html")
 
 def login(request):
     # if request.method == 'POST':
