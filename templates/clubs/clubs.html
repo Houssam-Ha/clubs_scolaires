@@ -1,9 +1,115 @@
-{%extends "base.html"%}
+{% extends "base.html" %}
+{% load static %}
 
-{% block content%}
+{% block title %}All Clubs - School Clubs{% endblock %}
 
-{% for club in clubs %}
-    <p>{{ club.nom_club }}</p>
-{% endfor %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/clubs.css' %}">
 
-{% endblock content%}
+<!-- Clubs Hero Section -->
+<section class="clubs-hero">
+    <h1>🏆 Discover School Clubs</h1>
+    <p>Find your passion and connect with like-minded students through our diverse club community</p>
+</section>
+
+<!-- Clubs Statistics -->
+<div class="clubs-stats">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-number">{{ clubs|length }}</span>
+            <span class="stat-label">Total Clubs</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ active_clubs_count }}</span>
+            <span class="stat-label">Active Clubs</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Active Members</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Monthly Events</span>
+        </div>
+    </div>
+</div>
+
+<!-- Clubs Filters -->
+<div class="clubs-filters">
+    <div class="filter-group">
+        <label for="search">🔍 Search:</label>
+        <input type="text" id="search" class="filter-input" placeholder="Search clubs...">
+    </div>
+    <div class="filter-group">
+        <label for="status">📊 Status:</label>
+        <select id="status" class="filter-input">
+            <option value="">All Clubs</option>
+            <option value="active">Active Only</option>
+            <option value="inactive">Inactive Only</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="sort">📈 Sort by:</label>
+        <select id="sort" class="filter-input">
+            <option value="name">Club Name</option>
+            <option value="date">Creation Date</option>
+            <option value="status">Status</option>
+        </select>
+    </div>
+</div>
+
+<!-- Clubs Grid -->
+{% if clubs %}
+    <div class="clubs-grid">
+        {% for club in clubs %}
+            <div class="club-card">
+                {% if club.logo %}
+                    <img src="{{ club.logo.url }}" alt="{{ club.nom_club }} Logo" class="club-logo">
+                {% else %}
+                    <div class="club-logo" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
+                        {{ club.nom_club|slice:":2"|upper }}
+                    </div>
+                {% endif %}
+                
+                <h3 class="club-name">{{ club.nom_club }}</h3>
+                <p class="club-description">{{ club.description|truncatewords:20 }}</p>
+                
+                <div class="club-meta">
+                    <span class="club-date">
+                        📅 Created {{ club.date_creation|date:"M d, Y" }}
+                    </span>
+                    <span class="club-status {% if club.active %}active{% else %}inactive{% endif %}">
+                        {% if club.active %}
+                            ✅ Active
+                        {% else %}
+                            ❌ Inactive
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="club-actions">
+                    <a href="{% url 'club' %}?id={{ club.id_club }}" class="btn btn-primary">
+                        👁️ View Details
+                    </a>
+                    {% if club.active %}
+                        <button class="btn btn-secondary">
+                            ➕ Join Club
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-clubs">
+        <h3>🔍 No Clubs Found</h3>
+        <p>There are currently no clubs available. Check back later or contact administration about creating new clubs.</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">
+            🏠 Return Home
+        </a>
+    </div>
+{% endif %}
+
+
+
+{% endblock content %}

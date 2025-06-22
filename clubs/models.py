@@ -8,5 +8,9 @@ class Club(models.Model):
     date_creation = models.DateField(auto_now_add=True)
     logo = models.ImageField(upload_to='logo/%Y/%m/%d/')
     active = models.BooleanField(default=True)
-
-
+    def __str__(self):
+        return self.nom_club
+    # class Meta:
+    #     verbose_name = 'Club'
+    #     verbose_name_plural = 'Clubs'
+    #     ordering = ['nom_club']

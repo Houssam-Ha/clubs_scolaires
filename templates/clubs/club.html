@@ -1,5 +1,172 @@
-{%extends "base.html"%}
+{% extends "base.html" %}
+{% load static %}
 
-{% block content%}
+{% block title %}
+    {% if club %}{{ club.nom_club }} - School Clubs{% else %}Club Not Found - School Clubs{% endif %}
+{% endblock %}
 
-{% endblock content%}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/club.css' %}">
+
+{% if club %}
+    <!-- Club Hero Section -->
+    <section class="club-hero">
+        <div class="club-hero-content">
+            {% if club.logo %}
+                <img src="{{ club.logo.url }}" alt="{{ club.nom_club }} Logo" class="club-logo-large">
+            {% else %}
+                <div class="club-logo-large" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 2rem;">
+                    {{ club.nom_club|slice:":2"|upper }}
+                </div>
+            {% endif %}
+            
+            <div class="club-info">
+                <h1>{{ club.nom_club }}</h1>
+                <p class="club-description-hero">{{ club.description|truncatewords:30 }}</p>
+                <div class="club-meta-hero">
+                    <span>📅 Founded {{ club.date_creation|date:"M d, Y" }}</span>
+                    <span>👥 25 Members</span>
+                    <span>📍 Room A-205</span>
+                </div>
+            </div>
+            
+            <div class="club-actions-hero">
+                {% if club.active %}
+                    <button class="btn btn-join">
+                        ➕ Join Club
+                    </button>
+                    <button class="btn btn-contact">
+                        📧 Contact
+                    </button>
+                {% else %}
+                    <div style="padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; text-align: center;">
+                        <p style="margin: 0; opacity: 0.8;">❌ This club is currently inactive</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="club-content">
+        <!-- Main Content Column -->
+        <div class="club-main">
+            <!-- Full Description -->
+            <div class="content-card">
+                <h3>📋 About {{ club.nom_club }}</h3>
+                <p>{{ club.description }}</p>
+                <p>
+                    Welcome to {{ club.nom_club }}! We are a vibrant community of students passionate about 
+                    our shared interests. Our club provides opportunities for learning, networking, and 
+                    personal growth through various activities and events throughout the academic year.
+                </p>
+                <p>
+                    Whether you're a beginner or have experience, everyone is welcome to join our community. 
+                    We believe in fostering an inclusive environment where all members can contribute and grow together.
+                </p>
+            </div>
+
+            <!-- Upcoming Activities -->
+            <div class="content-card">
+                <h3>📅 Upcoming Activities</h3>
+                <div class="activities-list">
+                    <div class="activity-item">
+                        <div class="activity-title">Weekly Meeting</div>
+                        <div class="activity-details">
+                            📍 Room A-205 • ⏰ Every Wednesday 3:30 PM - 5:00 PM
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-title">Special Workshop</div>
+                        <div class="activity-details">
+                            📍 Main Auditorium • ⏰ June 28, 2025 2:00 PM - 4:00 PM
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-title">Community Service Project</div>
+                        <div class="activity-details">
+                            📍 Local Community Center • ⏰ July 5, 2025 10:00 AM - 2:00 PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Club Members -->
+            <div class="content-card">
+                <h3>👥 Club Members</h3>
+                <div class="members-grid">
+                    <div class="member-card">
+                        <div class="member-avatar">👩‍💼</div>
+                        <div class="member-name">Sarah Johnson</div>
+                        <div class="member-role">President</div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">👨‍💼</div>
+                        <div class="member-name">Mike Chen</div>
+                        <div class="member-role">Vice President</div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">👩‍🎓</div>
+                        <div class="member-name">Emily Davis</div>
+                        <div class="member-role">Secretary</div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">👨‍🎓</div>
+                        <div class="member-name">Alex Rodriguez</div>
+                        <div class="member-role">Treasurer</div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">👩‍🎓</div>
+                        <div class="member-name">Lisa Wang</div>
+                        <div class="member-role">Member</div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">👨‍🎓</div>
+                        <div class="member-name">Tom Wilson</div>
+                        <div class="member-role">Member</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="club-sidebar">
+            <!-- Club Statistics -->
+            <div class="club-stats-card">
+                <h3>📊 Club Statistics</h3>
+                <div class="stats-list">
+                    <div class="stat-row">
+                        <span class="stat-label">Total Members</span>
+                        <span class="stat-value">25</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Active Members</span>
+                        <span class="stat-value">22</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Events This Year</span>
+                        <span class="stat-value">12</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Meeting Frequency</span>
+                        <span class="stat-value">Weekly</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Status</span>
+                        <span class="stat-value">
+                            {% if club.active %}
+                                ✅ Active
+                            {% else %}
+                                ❌ Inactive
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock content %}
+
