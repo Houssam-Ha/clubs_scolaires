@@ -1,0 +1,323 @@
+<!-- templates/pages/profile.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile - School Clubs{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<!-- Profile Hero Section -->
+<section class="profile-hero">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <img src="{% static 'images/default-avatar.jpg' %}" alt="Profile Picture" class="avatar-image">
+            <button class="avatar-edit">📷</button>
+        </div>
+        <div class="profile-info">
+            <h1 class="profile-name">John Doe</h1>
+            <p class="profile-role">Student • Senior Year</p>
+            <p class="profile-email">john.doe@schoolclubs.edu</p>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Clubs Joined</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">23</span>
+                    <span class="stat-label">Events Attended</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Activities</span>
+                </div>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button class="btn-primary">Edit Profile</button>
+            <button class="btn-secondary">Settings</button>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Navigation Tabs -->
+<div class="profile-nav">
+    <button class="nav-tab active" data-tab="overview">📊 Overview</button>
+    <button class="nav-tab" data-tab="clubs">🏆 My Clubs</button>
+    <button class="nav-tab" data-tab="activities">📅 Activities</button>
+    <button class="nav-tab" data-tab="achievements">🎖️ Achievements</button>
+    <button class="nav-tab" data-tab="settings">⚙️ Settings</button>
+</div>
+
+<!-- Tab Content -->
+<div class="tab-content">
+    <!-- Overview Tab -->
+    <div class="tab-pane active" id="overview">
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>📈 Recent Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">🏆</div>
+                        <div class="activity-details">
+                            <p class="activity-title">Joined Chess Club</p>
+                            <p class="activity-time">2 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📅</div>
+                        <div class="activity-details">
+                            <p class="activity-title">Attended Science Fair Meeting</p>
+                            <p class="activity-time">1 day ago</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">🎯</div>
+                        <div class="activity-details">
+                            <p class="activity-title">Completed Debate Tournament</p>
+                            <p class="activity-time">3 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📋 Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="action-btn">
+                        <span class="action-icon">🔍</span>
+                        <span class="action-text">Browse Clubs</span>
+                    </button>
+                    <button class="action-btn">
+                        <span class="action-icon">📅</span>
+                        <span class="action-text">View Calendar</span>
+                    </button>
+                    <button class="action-btn">
+                        <span class="action-icon">📧</span>
+                        <span class="action-text">Messages</span>
+                    </button>
+                    <button class="action-btn">
+                        <span class="action-icon">🏆</span>
+                        <span class="action-text">My Achievements</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h3>📊 Participation Summary</h3>
+            <div class="participation-grid">
+                <div class="participation-item">
+                    <h4>Most Active Club</h4>
+                    <p>🎭 Drama Club</p>
+                    <span class="participation-badge">15 activities</span>
+                </div>
+                <div class="participation-item">
+                    <h4>Recent Achievement</h4>
+                    <p>🥇 Outstanding Member</p>
+                    <span class="participation-badge">Science Club</span>
+                </div>
+                <div class="participation-item">
+                    <h4>Upcoming Event</h4>
+                    <p>🎪 Annual Talent Show</p>
+                    <span class="participation-badge">Next Week</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Clubs Tab -->
+    <div class="tab-pane" id="clubs">
+        <div class="clubs-grid">
+            <div class="club-card">
+                <div class="club-header">
+                    <h4>🎭 Drama Club</h4>
+                    <span class="club-role">Member</span>
+                </div>
+                <p class="club-description">Express creativity through theatrical performances and dramatic arts.</p>
+                <div class="club-stats">
+                    <span>👥 45 members</span>
+                    <span>📅 8 events</span>
+                </div>
+                <button class="club-action">View Details</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-header">
+                    <h4>🔬 Science Club</h4>
+                    <span class="club-role">Vice President</span>
+                </div>
+                <p class="club-description">Explore scientific discoveries and conduct exciting experiments.</p>
+                <div class="club-stats">
+                    <span>👥 32 members</span>
+                    <span>📅 12 events</span>
+                </div>
+                <button class="club-action">Manage</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-header">
+                    <h4>♟️ Chess Club</h4>
+                    <span class="club-role">New Member</span>
+                </div>
+                <p class="club-description">Master the game of chess through practice and tournaments.</p>
+                <div class="club-stats">
+                    <span>👥 28 members</span>
+                    <span>📅 3 events</span>
+                </div>
+                <button class="club-action">View Details</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activities Tab -->
+    <div class="tab-pane" id="activities">
+        <div class="activities-section">
+            <h3>📅 Upcoming Activities</h3>
+            <div class="activities-list">
+                <div class="activity-card upcoming">
+                    <div class="activity-date">
+                        <span class="day">25</span>
+                        <span class="month">Jun</span>
+                    </div>
+                    <div class="activity-info">
+                        <h4>Science Fair Preparation</h4>
+                        <p>🔬 Science Club • 3:00 PM - 5:00 PM</p>
+                        <p>Laboratory Building, Room 205</p>
+                    </div>
+                    <button class="activity-btn">Join</button>
+                </div>
+
+                <div class="activity-card upcoming">
+                    <div class="activity-date">
+                        <span class="day">28</span>
+                        <span class="month">Jun</span>
+                    </div>
+                    <div class="activity-info">
+                        <h4>Drama Rehearsal</h4>
+                        <p>🎭 Drama Club • 2:00 PM - 4:00 PM</p>
+                        <p>Auditorium, Main Stage</p>
+                    </div>
+                    <button class="activity-btn">Attending</button>
+                </div>
+            </div>
+
+            <h3>📋 Past Activities</h3>
+            <div class="activities-list">
+                <div class="activity-card completed">
+                    <div class="activity-date">
+                        <span class="day">20</span>
+                        <span class="month">Jun</span>
+                    </div>
+                    <div class="activity-info">
+                        <h4>Chess Tournament</h4>
+                        <p>♟️ Chess Club • Completed</p>
+                        <p>2nd Place Winner</p>
+                    </div>
+                    <span class="activity-status">🥈 Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Tab -->
+    <div class="tab-pane" id="achievements">
+        <div class="achievements-grid">
+            <div class="achievement-card earned">
+                <div class="achievement-icon">🥇</div>
+                <h4>Outstanding Member</h4>
+                <p>Awarded for exceptional participation in Science Club</p>
+                <span class="achievement-date">June 2025</span>
+            </div>
+
+            <div class="achievement-card earned">
+                <div class="achievement-icon">🎭</div>
+                <h4>Performance Star</h4>
+                <p>Recognized for outstanding performance in school play</p>
+                <span class="achievement-date">May 2025</span>
+            </div>
+
+            <div class="achievement-card">
+                <div class="achievement-icon">🏆</div>
+                <h4>Club Leader</h4>
+                <p>Become president or vice president of a club</p>
+                <span class="achievement-progress">In Progress</span>
+            </div>
+
+            <div class="achievement-card">
+                <div class="achievement-icon">🎯</div>
+                <h4>Event Organizer</h4>
+                <p>Successfully organize a school event</p>
+                <span class="achievement-progress">Locked</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-pane" id="settings">
+        <div class="settings-section">
+            <div class="content-card">
+                <h3>👤 Personal Information</h3>
+                <form class="settings-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" value="John" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" value="Doe" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="john.doe@schoolclubs.edu" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea class="form-input" rows="3">Passionate student interested in science and drama. Love participating in school activities!</textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="content-card">
+                <h3>🔔 Notification Preferences</h3>
+                <div class="notification-settings">
+                    <div class="notification-item">
+                        <label>Email Notifications</label>
+                        <input type="checkbox" checked class="toggle-switch">
+                    </div>
+                    <div class="notification-item">
+                        <label>Club Activity Updates</label>
+                        <input type="checkbox" checked class="toggle-switch">
+                    </div>
+                    <div class="notification-item">
+                        <label>Event Reminders</label>
+                        <input type="checkbox" class="toggle-switch">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab functionality
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs and panes
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            tab.classList.add('active');
+            
+            // Show corresponding tab pane
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+</script>
+
+{% endblock content %}

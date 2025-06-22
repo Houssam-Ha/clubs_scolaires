@@ -1,0 +1,9 @@
+{%extends "base.html"%}
+
+{% block content%}
+
+{% for club in clubs %}
+    <p>{{ club.nom_club }}</p>
+{% endfor %}
+
+{% endblock content%}

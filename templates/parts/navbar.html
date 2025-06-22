@@ -10,10 +10,10 @@
                 <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
             </li>
             <li class="nav-item dropdown">
-                <a href="#" class="nav-link">🏆 Clubs ▾</a>
+                <a href="{% url 'clubs' %}" class="nav-link">🏆 Clubs ▾</a>
                 <div class="dropdown-content">
                     <a href="#">Browse All Clubs</a>
-                    <a href="#">Sports Clubs</a>
+                    <a href="{% url 'club' %}">my Club</a>
                     <!--<a href="#">Arts Clubs</a>
                     <a href="#">Academic Clubs</a>
                     <a href="#">Create New Club</a>-->
