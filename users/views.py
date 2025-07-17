@@ -1,30 +1,20 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
-from django.contrib import messages
+from .models import Login
+from django.shortcuts import render
 
-# Create your views here.
+
+def user_login(request):
+    if request.method == "POST":
+        username_v = request.POST.get('username')
+        password_v = request.POST.get('password')
+        if username_v and password_v:
+            data = Login(username=username_v, password=password_v)
+            data.save()
+    return render(request, "users/Login.html")
 def profile(request):
-    return render(request, "users/profile.html")
-
-def login(request):
-    # if request.method == 'POST':
-    #     username = request.POST.get('username')
-    #     password = request.POST.get('password')
-    #     remember_me = request.POST.get('remember')
-        
-    #     # Authenticate user
-    #     user = authenticate(request, username=username, password=password)
-        
-    #     if user is not None:
-    #         auth_login(request, user)
-            
-    #         # Handle remember me functionality
-    #         if not remember_me:
-    #             request.session.set_expiry(0)  # Session expires when browser closes
-            
-    #         messages.success(request, f'Welcome back, {user.username}!')
-    #         return redirect('index')  # Redirect to home page after successful login
-    #     else:
-    #         messages.error(request, 'Invalid username or password. Please try again.')
-    
-    return render(request, "users/login.html")
+    # username_v = request.POST.get('username')
+    # password_v = request.POST.get('password')
+    # data = Login.objects.filter(username=username_v, password=password_v).first()
+    # if data:
+        return render(request, "users/profile.html")
+    # else:
+    #     return render(request, "users/login.html", {"error": "Invalid credentials"})
