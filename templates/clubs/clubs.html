@@ -92,9 +92,11 @@
                         👁️ View Details
                     </a>
                     {% if club.active %}
-                        <button class="btn btn-secondary">
-                            ➕ Join Club
-                        </button>
+                    <form method="POST" action="{% url 'join_club' club.id_club %}">
+                        {% csrf_token %}
+                        <button class="btn btn-secondary">➕ Join Club</button>
+
+                    </form>
                     {% endif %}
                 </div>
             </div>

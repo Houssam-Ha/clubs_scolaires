@@ -15,12 +15,13 @@
             <button class="avatar-edit">📷</button>
         </div>
         <div class="profile-info">
-            <h1 class="profile-name">John Doe</h1>
-            <p class="profile-role">Student • Senior Year</p>
-            <p class="profile-email">john.doe@schoolclubs.edu</p>
+            <h1 class="profile-name">{{ user.get_full_name|default:user.username }}</h1>
+            <p class="profile-role">{{ user.profile.role|default:"Student" }}</p>
+            <p class="profile-email">{{ user.email|default:"No email provided" }}</p>
+
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-number">5</span>
+                    <span class="stat-number">{{ user.joined_clubs.count }}</span>
                     <span class="stat-label">Clubs Joined</span>
                 </div>
                 <div class="stat-item">
@@ -33,6 +34,7 @@
                 </div>
             </div>
         </div>
+
         <div class="profile-actions">
             <button class="btn-primary">Edit Profile</button>
             <button class="btn-secondary">Settings</button>
