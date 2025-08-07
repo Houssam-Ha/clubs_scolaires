@@ -103,34 +103,19 @@
 
                     {%for member in club.members.all %}
                     <div class="member-card">
-                        <div class="member-avatar">👩‍💼</div>
+                        {% if user.USER_TYPE == "male"%}
+                            <div class="member-avatar">👨‍🎓</div>
+                        {%else%}
+                            <div class="member-avatar">👩‍🎓</div>
+                        {% endif %}
+
                         <div class="member-info">
                             <h4 class="member-name">{{user.username}}</h4>
-                            <p class="member-role">{{user.email}}</p>
+                            <p class="member-role">{{user.USER_TYPE_CHOICES}}</p>
                         </div>
                     </div>
                     {% endfor %}
-                    <div class="member-card">
-                        <div class="member-avatar">👨‍💼</div>
-                        <div class="member-info">
-                            <h4 class="member-name">Mike Chen</h4>
-                            <p class="member-role">Vice President</p>
-                        </div>
-                    </div>
-                    <div class="member-card">
-                        <div class="member-avatar">👩‍🎓</div>
-                        <div class="member-info">
-                            <h4 class="member-name">Emily Davis</h4>
-                            <p class="member-role">Secretary</p>
-                        </div>
-                    </div>
-                    <div class="member-card">
-                        <div class="member-avatar">👨‍🎓</div>
-                        <div class="member-info">
-                            <h4 class="member-name">Alex Rodriguez</h4>
-                            <p class="member-role">Treasurer</p>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
