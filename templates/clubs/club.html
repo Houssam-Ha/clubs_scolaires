@@ -32,9 +32,12 @@
             
             <div class="club-actions-hero">
                 {% if club.active %}
+                <form method="POST" action="{% url 'join__club' club.id_club %}">
+                    {% csrf_token %}
                     <button class="btn btn-join">
                         ➕ Join Club
                     </button>
+                </form>
                     <button class="btn btn-contact">
                         📧 Contact
                     </button>
@@ -100,18 +103,17 @@
             <div class="content-card">
                 <h2 class="section-title">👥 Club Leadership</h2>
                 <div class="members-grid">
-
-                    {%for member in club.members.all %}
+                    {% for member in club.members.all %}
                     <div class="member-card">
-                        {% if user.USER_TYPE == "male"%}
+                        {% if member.gender == "male" %}
                             <div class="member-avatar">👨‍🎓</div>
-                        {%else%}
+                        {% else %}
                             <div class="member-avatar">👩‍🎓</div>
                         {% endif %}
 
                         <div class="member-info">
-                            <h4 class="member-name">{{user.username}}</h4>
-                            <p class="member-role">{{user.USER_TYPE_CHOICES}}</p>
+                            <h4 class="member-name">{{ member.username }}</h4>
+                            <p class="member-role">{{ member.get_user_type_display }}</p>
                         </div>
                     </div>
                     {% endfor %}
@@ -152,7 +154,6 @@
                 <h3 class="sidebar-title">⚡ Quick Actions</h3>
                 <div class="quick-actions">
                     {% if club.active %}
-                        <button class="action-btn primary">➕ Join Club</button>
                         <button class="action-btn secondary">📧 Contact Leaders</button>
                         <button class="action-btn secondary">📅 View Calendar</button>
                     {% else %}

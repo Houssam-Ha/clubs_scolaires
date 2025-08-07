@@ -8,26 +8,23 @@ class CustomUser(AbstractUser):
         ('3', 'Administration')
     ]
     
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+    ]
+    
     user_type = models.CharField(
         max_length=1,
         choices=USER_TYPE_CHOICES,
         default='1'
     )
     
-    def __str__(self):
-        return f"{self.username} ({self.get_user_type_display()})"
-
-class male_or_femelle(AbstractUser):
-    USER_TYPE = [
-        ('1', 'male'),
-        ('2', 'femelle'),
-    ]
-    
-    user_sex = models.CharField(
-        max_length=1,
-        choices=USER_TYPE,
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES,
+        blank=True,
+        null=True
     )
     
     def __str__(self):
-        return f"{self.username} ({self.user_sex_display()})"
-    
+        return f"{self.username} ({self.get_user_type_display()})"
