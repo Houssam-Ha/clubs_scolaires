@@ -129,47 +129,35 @@
     </div>
 
     <!-- My Clubs Tab -->
+
     <div class="tab-pane" id="clubs">
-        <div class="clubs-grid">
-            <div class="club-card">
-                <div class="club-header">
-                    <h4>🎭 Drama Club</h4>
-                    <span class="club-role">Member</span>
-                </div>
-                <p class="club-description">Express creativity through theatrical performances and dramatic arts.</p>
-                <div class="club-stats">
-                    <span>👥 45 members</span>
-                    <span>📅 8 events</span>
-                </div>
-                <button class="club-action">View Details</button>
-            </div>
+        {% if user.joined_clubs %}
+            <div class="clubs-grid">
+                {% for club in user.joined_clubs.all %}
+                    <div class="club-card">
+                        <div class="club-header">
 
-            <div class="club-card">
-                <div class="club-header">
-                    <h4>🔬 Science Club</h4>
-                    <span class="club-role">Vice President</span>
-                </div>
-                <p class="club-description">Explore scientific discoveries and conduct exciting experiments.</p>
-                <div class="club-stats">
-                    <span>👥 32 members</span>
-                    <span>📅 12 events</span>
-                </div>
-                <button class="club-action">Manage</button>
-            </div>
+                            {% if club.logo %}
+                                <img src="{{ club.logo.url }}" alt="{{ club.nom_club }} Logo"  width="100" height="100">
+                            {% else %}
+                                <div class="club-logo" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
+                                    {{ club.nom_club|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
 
-            <div class="club-card">
-                <div class="club-header">
-                    <h4>♟️ Chess Club</h4>
-                    <span class="club-role">New Member</span>
-                </div>
-                <p class="club-description">Master the game of chess through practice and tournaments.</p>
-                <div class="club-stats">
-                    <span>👥 28 members</span>
-                    <span>📅 3 events</span>
-                </div>
-                <button class="club-action">View Details</button>
+                            <h3>{{ club.nom_club }}</h3>
+                            <span class="club-role">{{ user.get_user_type_display }}</span>
+                        </div>
+                        <p class="club-description">{{club.description}}</p>
+                        <div class="club-stats">
+                            <span>👥 {{club.members.count}}</span>
+                            <span>📅 8 events</span>
+                        </div>
+                        <button class="club-action">View Details</button>
+                    </div>
+                {%endfor%}
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <!-- Activities Tab -->
@@ -264,16 +252,16 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>First Name</label>
-                            <input type="text" value="John" class="form-input">
+                            <input type="text" value="" class="form-input">
                         </div>
                         <div class="form-group">
                             <label>Last Name</label>
-                            <input type="text" value="Doe" class="form-input">
+                            <input type="text" value="" class="form-input">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" value="john.doe@schoolclubs.edu" class="form-input">
+                        <input type="email" value="" class="form-input">
                     </div>
                     <div class="form-group">
                         <label>Bio</label>
