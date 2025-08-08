@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Activities - School Clubs{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/activities.css' %}">
+
+<!-- Activities Hero Section -->
+<section class="activities-hero">
+    <h1>📅 School Activities</h1>
+    <p>Join exciting activities, workshops, and events organized by your favorite clubs</p>
+</section>
+
+<!-- Activities Statistics -->
+<div class="activities-stats">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-number">{{ activities|length }}</span>
+            <span class="stat-label">Total Activities</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ upcoming_count }}</span>
+            <span class="stat-label">Upcoming Activities</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ ongoing_count }}</span>
+            <span class="stat-label">Ongoing Activities</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ featured_count }}</span>
+            <span class="stat-label">Featured Events</span>
+        </div>
+    </div>
+</div>
+
+<!-- Activities Filters -->
+<div class="activities-filters">
+    <div class="filter-group">
+        <label for="search">🔍 Search:</label>
+        <input type="text" id="search" class="filter-input" placeholder="Search activities..." value="{{ current_filters.search }}">
+    </div>
+    <div class="filter-group">
+        <label for="status">📊 Status:</label>
+        <select id="status" class="filter-input">
+            <option value="">All Status</option>
+            {% for status_key, status_label in status_choices %}
+                <option value="{{ status_key }}" {% if current_filters.status == status_key %}selected{% endif %}>
+                    {{ status_label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="type">🎯 Type:</label>
+        <select id="type" class="filter-input">
+            <option value="">All Types</option>
+            {% for type_key, type_label in activity_types %}
+                <option value="{{ type_key }}" {% if current_filters.type == type_key %}selected{% endif %}>
+                    {{ type_label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="club">🏆 Club:</label>
+        <select id="club" class="filter-input">
+            <option value="">All Clubs</option>
+            {% for club in clubs %}
+                <option value="{{ club.id_club }}" {% if current_filters.club == club.id_club|stringformat:"s" %}selected{% endif %}>
+                    {{ club.nom_club }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<!-- Create Activity Button (for admins) -->
+{% if user.is_authenticated and user.user_type in "23" %}
+<div style="text-align: center; margin-bottom: 2rem;">
+    <a href="{% url 'create_activity' %}" class="btn btn-primary" style="display: inline-block; padding: 1rem 2rem; font-size: 1.1rem;">
+        ➕ Create New Activity
+    </a>
+</div>
+{% endif %}
+
+<!-- Activities Grid -->
+{% if activities %}
+    <div class="activities-grid">
+        {% for activity in activities %}
+            <div class="activity-card {% if activity.is_featured %}featured{% endif %}">
+                {% if activity.image %}
+                    <img src="{{ activity.image.url }}" alt="{{ activity.title }}" class="activity-image">
+                {% else %}
+                    <div class="activity-image-placeholder">
+                        {% if activity.activity_type == 'meeting' %}📋
+                        {% elif activity.activity_type == 'workshop' %}🔧
+                        {% elif activity.activity_type == 'event' %}🎉
+                        {% elif activity.activity_type == 'competition' %}🏆
+                        {% elif activity.activity_type == 'training' %}💪
+                        {% elif activity.activity_type == 'social' %}🤝
+                        {% elif activity.activity_type == 'community' %}🌍
+                        {% elif activity.activity_type == 'trip' %}🚌
+                        {% else %}📅{% endif %}
+                    </div>
+                {% endif %}
+                
+                <div class="activity-content">
+                    <div class="activity-header">
+                        <div>
+                            <h3 class="activity-title">{{ activity.title }}</h3>
+                            <div class="activity-club">
+                                🏆 {{ activity.club.nom_club }}
+                            </div>
+                        </div>
+                        <span class="activity-type">{{ activity.get_activity_type_display }}</span>
+                    </div>
+                    
+                    <p class="activity-description">{{ activity.description|truncatewords:20 }}</p>
+                    
+                    <div class="activity-meta">
+                        <div class="meta-item">
+                            📅 {{ activity.start_date|date:"M d, Y" }}
+                        </div>
+                        <div class="meta-item">
+                            ⏰ {{ activity.start_time|time:"H:i" }}
+                        </div>
+                        <div class="meta-item">
+                            📍 {{ activity.location }}
+                        </div>
+                        <div class="meta-item">
+                            <span class="activity-status {{ activity.status }}">
+                                {% if activity.status == 'upcoming' %}🔜 Upcoming
+                                {% elif activity.status == 'ongoing' %}⏳ Ongoing
+                                {% elif activity.status == 'completed' %}✅ Completed
+                                {% elif activity.status == 'cancelled' %}❌ Cancelled
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="participants-info">
+                        <span class="participants-count">
+                            👥 {{ activity.participants.count }}/{{ activity.max_participants }} participants
+                        </span>
+                        <span class="spots-remaining {% if activity.spots_remaining <= 5 and activity.spots_remaining > 0 %}low{% elif activity.spots_remaining == 0 %}full{% endif %}">
+                            {% if activity.spots_remaining > 0 %}
+                                {{ activity.spots_remaining }} spots left
+                            {% else %}
+                                Full
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="activity-actions">
+                        <a href="{% url 'activity' %}?id={{ activity.id_activity }}" class="btn btn-primary">
+                            👁️ View Details
+                        </a>
+                        {% if activity.status == 'upcoming' and activity.registration_required %}
+                            {% if user.is_authenticated %}
+                                {% if user in activity.participants.all %}
+                                    <form method="POST" action="{% url 'leave_activity' activity.id_activity %}" style="flex: 1;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger" style="width: 100%;">
+                                            ➖ Leave Activity
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    {% if not activity.is_full %}
+                                        <form method="POST" action="{% url 'join_activity' activity.id_activity %}" style="flex: 1;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                                                ➕ Join Activity
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-secondary" disabled style="flex: 1;">
+                                            🚫 Full
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn btn-secondary">
+                                    🔑 Login to Join
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-activities">
+        <h3>🔍 No Activities Found</h3>
+        <p>There are currently no activities matching your criteria. Check back later or adjust your filters.</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">
+            🏠 Return Home
+        </a>
+    </div>
+{% endif %}
+
+<script>
+    // Filter functionality
+    const searchInput = document.getElementById('search');
+    const statusSelect = document.getElementById('status');
+    const typeSelect = document.getElementById('type');
+    const clubSelect = document.getElementById('club');
+    
+    function updateFilters() {
+        const params = new URLSearchParams();
+        
+        if (searchInput.value.trim()) {
+            params.append('search', searchInput.value.trim());
+        }
+        if (statusSelect.value) {
+            params.append('status', statusSelect.value);
+        }
+        if (typeSelect.value) {
+            params.append('type', typeSelect.value);
+        }
+        if (clubSelect.value) {
+            params.append('club', clubSelect.value);
+        }
+        
+        const queryString = params.toString();
+        const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+        window.location.href = newUrl;
+    }
+    
+    // Add event listeners
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            updateFilters();
+        }
+    });
+    
+    statusSelect.addEventListener('change', updateFilters);
+    typeSelect.addEventListener('change', updateFilters);
+    clubSelect.addEventListener('change', updateFilters);
+    
+    // Search button functionality
+    searchInput.addEventListener('blur', function() {
+        if (this.value !== '{{ current_filters.search }}') {
+            updateFilters();
+        }
+    });
+</script>
+
+{% endblock content %}

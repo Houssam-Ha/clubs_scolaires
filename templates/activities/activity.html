@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if activity %}{{ activity.title }} - School Activities{% else %}Activity Not Found - School Activities{% endif %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/activities.css' %}">
+<link rel="stylesheet" href="{% static 'css/activity.css' %}">
+
+{% if activity %}
+    <!-- Activity Hero Section -->
+    <section class="activity-hero">
+        <div class="activity-hero-content">
+            {% if activity.image %}
+                <img src="{{ activity.image.url }}" alt="{{ activity.title }}" class="activity-image-large">
+            {% else %}
+                <div class="activity-image-large activity-image-placeholder">
+                    {% if activity.activity_type == 'meeting' %}📋
+                    {% elif activity.activity_type == 'workshop' %}🔧
+                    {% elif activity.activity_type == 'event' %}🎉
+                    {% elif activity.activity_type == 'competition' %}🏆
+                    {% elif activity.activity_type == 'training' %}💪
+                    {% elif activity.activity_type == 'social' %}🤝
+                    {% elif activity.activity_type == 'community' %}🌍
+                    {% elif activity.activity_type == 'trip' %}🚌
+                    {% else %}📅{% endif %}
+                </div>
+            {% endif %}
+            
+            <div class="activity-info">
+                <div class="activity-badges">
+                    <span class="activity-type-badge">{{ activity.get_activity_type_display }}</span>
+                    <span class="activity-status-badge {{ activity.status }}">
+                        {% if activity.status == 'upcoming' %}🔜 Upcoming
+                        {% elif activity.status == 'ongoing' %}⏳ Ongoing
+                        {% elif activity.status == 'completed' %}✅ Completed
+                        {% elif activity.status == 'cancelled' %}❌ Cancelled
+                        {% endif %}
+                    </span>
+                    {% if activity.is_featured %}
+                        <span class="featured-badge">⭐ Featured</span>
+                    {% endif %}
+                </div>
+                
+                <h1 class="activity-title">{{ activity.title }}</h1>
+                <p class="activity-club-info">
+                    🏆 Organized by <a href="{% url 'club' %}?id={{ activity.club.id_club }}">{{ activity.club.nom_club }}</a>
+                </p>
+                
+                <div class="activity-meta-hero">
+                    <span class="meta-item">📅 {{ activity.start_date|date:"l, F d, Y" }}</span>
+                    <span class="meta-item">⏰ {{ activity.start_time|time:"H:i" }} - {{ activity.end_time|time:"H:i" }}</span>
+                    <span class="meta-item">📍 {{ activity.location }}</span>
+                    <span class="meta-item">⏱️ {{ activity.duration_hours|floatformat:1 }} hours</span>
+                </div>
+            </div>
+            
+            <div class="activity-actions-hero">
+                {% if activity.status == 'upcoming' %}
+                    {% if user.is_authenticated %}
+                        {% if user_registered %}
+                            <form method="POST" action="{% url 'leave_activity' activity.id_activity %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">
+                                    ➖ Leave Activity
+                                </button>
+                            </form>
+                            <div class="registration-status">
+                                ✅ You are registered for this activity
+                            </div>
+                        {% else %}
+                            {% if can_register %}
+                                <form method="POST" action="{% url 'join_activity' activity.id_activity %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-join">
+                                        ➕ Join Activity
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button class="btn btn-disabled" disabled>
+                                    🚫 Registration Full
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-join">
+                            🔑 Login to Join
+                        </a>
+                    {% endif %}
+                    <button class="btn btn-contact">
+                        📧 Contact Organizer
+                    </button>
+                {% else %}
+                    <div class="inactive-notice">
+                        <p>This activity is {{ activity.get_status_display|lower }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <div class="activity-content-wrapper">
+        <!-- Main Content Column -->
+        <div class="activity-main-content">
+            <!-- Description Section -->
+            <div class="content-card">
+                <h2 class="section-title">📋 About This Activity</h2>
+                <div class="section-content">
+                    <p class="activity-full-description">{{ activity.description }}</p>
+                </div>
+            </div>
+
+            <!-- Requirements Section -->
+            {% if activity.requirements %}
+            <div class="content-card">
+                <h2 class="section-title">📝 Requirements & What to Bring</h2>
+                <div class="section-content">
+                    <p>{{ activity.requirements }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Schedule Section -->
+            <div class="content-card">
+                <h2 class="section-title">📅 Schedule Details</h2>
+                <div class="schedule-details">
+                    <div class="schedule-item">
+                        <div class="schedule-icon">📅</div>
+                        <div class="schedule-info">
+                            <h4>Date</h4>
+                            <p>{{ activity.start_date|date:"l, F d, Y" }}
+                            {% if activity.start_date != activity.end_date %}
+                                to {{ activity.end_date|date:"l, F d, Y" }}
+                            {% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-icon">⏰</div>
+                        <div class="schedule-info">
+                            <h4>Time</h4>
+                            <p>{{ activity.start_time|time:"H:i" }} - {{ activity.end_time|time:"H:i" }} ({{ activity.duration_hours|floatformat:1 }} hours)</p>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-icon">📍</div>
+                        <div class="schedule-info">
+                            <h4>Location</h4>
+                            <p>{{ activity.location }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participants Section -->
+            <div class="content-card">
+                <h2 class="section-title">👥 Participants ({{ activity.participants.count }}/{{ activity.max_participants }})</h2>
+                <div class="participants-grid">
+                    {% for participant in activity.participants.all %}
+                    <div class="participant-card">
+                        <div class="participant-avatar">
+                            {% if participant.gender == "male" %}👨‍🎓{% else %}👩‍🎓{% endif %}
+                        </div>
+                        <div class="participant-info">
+                            <h4 class="participant-name">{{ participant.username }}</h4>
+                            <p class="participant-role">{{ participant.get_user_type_display }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="no-participants">No participants registered yet. Be the first to join!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="activity-sidebar">
+            <!-- Activity Statistics -->
+            <div class="sidebar-card activity-stats-card">
+                <h3 class="sidebar-title">📊 Activity Info</h3>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-label">Status</span>
+                        <span class="stat-value status-badge {{ activity.status }}">
+                            {% if activity.status == 'upcoming' %}🔜 Upcoming
+                            {% elif activity.status == 'ongoing' %}⏳ Ongoing
+                            {% elif activity.status == 'completed' %}✅ Completed
+                            {% elif activity.status == 'cancelled' %}❌ Cancelled
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Type</span>
+                        <span class="stat-value">{{ activity.get_activity_type_display }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Participants</span>
+                        <span class="stat-value">{{ activity.participants.count }}/{{ activity.max_participants }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Duration</span>
+                        <span class="stat-value">{{ activity.duration_hours|floatformat:1 }}h</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Organizer</span>
+                        <span class="stat-value">{{ activity.created_by.username }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Club Info -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">🏆 Organizing Club</h3>
+                <div class="club-info-sidebar">
+                    <div class="club-header">
+                        {% if activity.club.logo %}
+                            <img src="{{ activity.club.logo.url }}" alt="{{ activity.club.nom_club }}" class="club-logo-small">
+                        {% else %}
+                            <div class="club-logo-small club-logo-placeholder">
+                                {{ activity.club.nom_club|slice:":2"|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h4>{{ activity.club.nom_club }}</h4>
+                            <p>{{ activity.club.members.count }} members</p>
+                        </div>
+                    </div>
+                    <p class="club-description">{{ activity.club.description|truncatewords:15 }}</p>
+                    <a href="{% url 'club' %}?id={{ activity.club.id_club }}" class="btn btn-secondary">
+                        View Club Details
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">⚡ Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="{% url 'activities' %}" class="action-btn secondary">📋 All Activities</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'my_activities' %}" class="action-btn secondary">👤 My Activities</a>
+                    {% endif %}
+                    <button class="action-btn secondary">📧 Contact Support</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    <!-- Activity Not Found -->
+    <div class="not-found-container">
+        <div class="not-found-content">
+            <h1 class="not-found-title">🔍 Activity Not Found</h1>
+            <p class="not-found-message">
+                Sorry, we couldn't find the activity you're looking for. 
+                It may have been removed or the link might be incorrect.
+            </p>
+            <div class="not-found-actions">
+                <a href="{% url 'activities' %}" class="btn btn-primary">
+                    📅 Browse All Activities
+                </a>
+                <a href="{% url 'index' %}" class="btn btn-secondary">
+                    🏠 Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock content %}

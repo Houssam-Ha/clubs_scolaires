@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Activity - School Clubs{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/activities.css' %}">
+<link rel="stylesheet" href="{% static 'css/create_activity.css' %}">
+
+<!-- Create Activity Hero Section -->
+<section class="create-activity-hero">
+    <h1>➕ Create New Activity</h1>
+    <p>Organize engaging activities and events for your club members</p>
+</section>
+
+<!-- Create Activity Form -->
+<div class="create-activity-container">
+    <div class="form-container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="create-activity-form">
+            {% csrf_token %}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">📋 Basic Information</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="title" class="form-label">Activity Title *</label>
+                        <input type="text" id="title" name="title" class="form-input" placeholder="Enter activity title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="activity_type" class="form-label">Activity Type *</label>
+                        <select id="activity_type" name="activity_type" class="form-input" required>
+                            <option value="">Select Activity Type</option>
+                            {% for type_key, type_label in activity_types %}
+                                <option value="{{ type_key }}">{{ type_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="club" class="form-label">Organizing Club *</label>
+                        <select id="club" name="club" class="form-input" required>
+                            <option value="">Select Club</option>
+                            {% for club in clubs %}
+                                <option value="{{ club.id_club }}">{{ club.nom_club }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea id="description" name="description" class="form-input" rows="4" placeholder="Describe your activity in detail..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="image" class="form-label">Activity Image</label>
+                        <input type="file" id="image" name="image" class="form-input" accept="image/*">
+                        <small class="form-help">Upload an image to make your activity more attractive (optional)</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schedule Section -->
+            <div class="form-section">
+                <h2 class="section-title">📅 Schedule</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="start_date" class="form-label">Start Date *</label>
+                        <input type="date" id="start_date" name="start_date" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="start_time" class="form-label">Start Time *</label>
+                        <input type="time" id="start_time" name="start_time" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end_date" class="form-label">End Date *</label>
+                        <input type="date" id="end_date" name="end_date" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end_time" class="form-label">End Time *</label>
+                        <input type="time" id="end_time" name="end_time" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="location" class="form-label">Location *</label>
+                        <input type="text" id="location" name="location" class="form-input" placeholder="e.g., Room A-205, Main Auditorium, Sports Field" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Registration Section -->
+            <div class="form-section">
+                <h2 class="section-title">👥 Registration Settings</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="max_participants" class="form-label">Maximum Participants</label>
+                        <input type="number" id="max_participants" name="max_participants" class="form-input" value="50" min="1" max="500">
+                        <small class="form-help">Leave empty for unlimited participants</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registration_deadline" class="form-label">Registration Deadline</label>
+                        <input type="datetime-local" id="registration_deadline" name="registration_deadline" class="form-input">
+                        <small class="form-help">Optional: Set a deadline for registration</small>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="registration_required" name="registration_required" checked>
+                            <label for="registration_required" class="checkbox-label">Registration Required</label>
+                        </div>
+                        <small class="form-help">Uncheck if this activity doesn't require registration</small>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="is_featured" name="is_featured">
+                            <label for="is_featured" class="checkbox-label">Featured Activity</label>
+                        </div>
+                        <small class="form-help">Featured activities are highlighted on the activities page</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">📝 Additional Information</h2>
+                
+                <div class="form-group">
+                    <label for="requirements" class="form-label">Requirements & What to Bring</label>
+                    <textarea id="requirements" name="requirements" class="form-input" rows="3" placeholder="List any special requirements, materials to bring, or preparation needed..."></textarea>
+                    <small class="form-help">Help participants prepare for the activity</small>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    ✅ Create Activity
+                </button>
+                <a href="{% url 'activities' %}" class="btn btn-secondary">
+                    ❌ Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Form Help Sidebar -->
+    <div class="form-sidebar">
+        <div class="help-card">
+            <h3>💡 Tips for Creating Great Activities</h3>
+            <ul>
+                <li><strong>Be Descriptive:</strong> Write a clear, engaging description that explains what participants will do and learn.</li>
+                <li><strong>Set Realistic Capacity:</strong> Consider the space and resources available when setting participant limits.</li>
+                <li><strong>Choose the Right Type:</strong> Select the activity type that best matches your event for better discoverability.</li>
+                <li><strong>Include Requirements:</strong> List any materials, skills, or preparation needed in advance.</li>
+                <li><strong>Add an Image:</strong> Visual content makes activities more appealing and gets more registrations.</li>
+            </ul>
+        </div>
+        
+        <div class="help-card">
+            <h3>📋 Activity Types Guide</h3>
+            <div class="activity-types-guide">
+                <div class="type-item">
+                    <strong>📋 Meeting:</strong> Regular club meetings, discussions, planning sessions
+                </div>
+                <div class="type-item">
+                    <strong>🔧 Workshop:</strong> Skill-building sessions, tutorials, hands-on learning
+                </div>
+                <div class="type-item">
+                    <strong>🎉 Event:</strong> Celebrations, shows, exhibitions, special occasions
+                </div>
+                <div class="type-item">
+                    <strong>🏆 Competition:</strong> Contests, tournaments, competitive activities
+                </div>
+                <div class="type-item">
+                    <strong>💪 Training:</strong> Skill development, practice sessions, coaching
+                </div>
+                <div class="type-item">
+                    <strong>🤝 Social:</strong> Social gatherings, networking, team building
+                </div>
+                <div class="type-item">
+                    <strong>🌍 Community:</strong> Service projects, volunteer work, outreach
+                </div>
+                <div class="type-item">
+                    <strong>🚌 Trip:</strong> Field trips, excursions, educational visits
+                </div>
+            </div>
+        </div>
+        
+        <div class="help-card">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li>Activities will be set to "Upcoming" status by default</li>
+                <li>You can edit activity details after creation</li>
+                <li>Participants will receive notifications when they register</li>
+                <li>Featured activities appear prominently on the main activities page</li>
+                <li>Make sure to check club permissions before creating activities</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.create-activity-form');
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
+    const startTimeInput = document.getElementById('start_time');
+    const endTimeInput = document.getElementById('end_time');
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    startDateInput.min = today;
+    endDateInput.min = today;
+    
+    // Auto-set end date when start date changes
+    startDateInput.addEventListener('change', function() {
+        if (this.value && (!endDateInput.value || endDateInput.value < this.value)) {
+            endDateInput.value = this.value;
+        }
+        endDateInput.min = this.value;
+    });
+    
+    // Validate date/time combinations
+    function validateDateTime() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        const startTime = startTimeInput.value;
+        const endTime = endTimeInput.value;
+        
+        if (startDate && endDate && startTime && endTime) {
+            const start = new Date(`${startDate}T${startTime}`);
+            const end = new Date(`${endDate}T${endTime}`);
+            
+            if (start >= end) {
+                endTimeInput.setCustomValidity('End time must be after start time');
+            } else {
+                endTimeInput.setCustomValidity('');
+            }
+        }
+    }
+    
+    startDateInput.addEventListener('change', validateDateTime);
+    endDateInput.addEventListener('change', validateDateTime);
+    startTimeInput.addEventListener('change', validateDateTime);
+    endTimeInput.addEventListener('change', validateDateTime);
+    
+    // Image preview
+    const imageInput = document.getElementById('image');
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create preview if it doesn't exist
+                let preview = document.getElementById('image-preview');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'image-preview';
+                    preview.style.maxWidth = '200px';
+                    preview.style.maxHeight = '150px';
+                    preview.style.marginTop = '10px';
+                    preview.style.borderRadius = '8px';
+                    preview.style.border = '2px solid #e5e7eb';
+                    imageInput.parentNode.appendChild(preview);
+                }
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let allValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#ef4444';
+                allValid = false;
+            } else {
+                field.style.borderColor = '#d1d5db';
+            }
+        });
+        
+        if (!allValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ Creating Activity...';
+    });
+});
+</script>
+
+{% endblock content %}
